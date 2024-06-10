@@ -1,93 +1,79 @@
 import random
-""" 
-JUEGO EL ASESINO
-REGLAS:
 
-"""
-
+# Clase base Jugador
 class Jugador:
     def __init__(self, nombre):
         self.nombre = nombre
-        self.estado = True # Vivo
+        self.estado = True  # Vivo
 
+# Clase Pueblo
 class Pueblo(Jugador):
-    def __init__(self):
-        pass
+    def __init__(self, nombre):
+        super().__init__(nombre)
 
+# Clase Enemigo
 class Enemigo(Jugador):
-    def __init__(self,):
-        pass
+    def __init__(self, nombre):
+        super().__init__(nombre)
 
-    def eliminar(self):
-        # si elimina al policia o medico pierde el enemigo
-        # sino puede eliminar
-        print("Jugador eliminado")
-
-class Policia(Jugador):
-    def __init__(self,):
-        pass
-
-    def acusar():
-        pass
-
-class Medico(Jugador):
-    def __init__(self,):
-        pass
-
-    def salvar():
-        pass
-
-Jugadores = int(input("¿ Cuantos jugadores hay ? ")) # que no pueda ingresar letras
-while (Jugadores < 4):
-    print("No hay suficientes jugadores, deben ser 4 o mas.")
-    Jugadores = int(input("¿ Cuantos jugadores hay ? "))
-
-for i in range(1,Jugadores+1):
-    nombre_jugador = input("Cual es su nombre ? ")
-    Jugador(nombre_jugador, True)
-
-# def roles_aleatoriamente():
-
-roles = [
-    Enemigo(),
-    Medico(),
-    Policia(),
-    Pueblo(),
-]
-
-
-def asignar_autos_aleatoriamente(jugadores, autos):
-    autos_disponibles = autos[:]
-    random.shuffle(autos_disponibles)
-    
-    for jugador in jugadores:
-        if autos_disponibles:
-            auto_asignado = autos_disponibles.pop()
-            jugador.elegir_auto(auto_asignado)
+    def eliminar(self, jugador):
+        if isinstance(jugador, Policia) or isinstance(jugador, Medico):
+            print(f"{self.nombre} (Enemigo) ha perdido por eliminar a un {jugador.__class__.__name__}.")
         else:
-            print(f"No hay suficientes autos para {jugador.nombre}.")
+            print(f"{self.nombre} (Enemigo) ha eliminado a {jugador.nombre}.")
+            jugador.estado = False
 
-# Ejemplo de uso con las clases y el juego definido anteriormente
-autos = [
-    Auto("Auto Rojo", velocidad=10, durabilidad=100),
-    Auto("Auto Azul", velocidad=8, durabilidad=120),
-    Auto("Auto Verde", velocidad=9, durabilidad=110),
-    Auto("Auto Amarillo", velocidad=7, durabilidad=130)
-]
+# Clase Policia
+class Policia(Jugador):
+    def __init__(self, nombre):
+        super().__init__(nombre)
 
-jugadores = [
-    Jugador("Jugador 1"),
-    Jugador("Jugador 2"),
-    Jugador("Jugador 3"),
-    Jugador("Jugador 4")
-]
+    def acusar(self, jugador):
+        if isinstance(jugador, Enemigo):
+            print(f"{self.nombre} (Policia) ha acusado correctamente a {jugador.nombre} (Enemigo).")
+        else:
+            print(f"{self.nombre} (Policia) ha acusado incorrectamente a {jugador.nombre} ({jugador.__class__.__name__}).")
 
-# Asignar autos aleatoriamente a los jugadores
-asignar_autos_aleatoriamente(jugadores, autos)
+# Clase Medico
+class Medico(Jugador):
+    def __init__(self, nombre):
+        super().__init__(nombre)
 
-# Inicializar pista
-pista = Pista(distancia=100)
+    def salvar(self, jugador):
+        if not jugador.estado:
+            jugador.estado = True
+            print(f"{self.nombre} (Medico) ha salvado a {jugador.nombre}.")
+        else:
+            print(f"{self.nombre} (Medico) no necesita salvar a {jugador.nombre}, ya está vivo.")
 
-# Comenzar el juego
-juego = Juego(jugadores, pista)
-juego.jugar()
+# Solicitar número de jugadores
+while True:
+    try:
+        num_jugadores = int(input("¿Cuántos jugadores hay? "))
+        if num_jugadores >= 4:
+            break
+        else:
+            print("No hay suficientes jugadores, deben ser 4 o más.")
+    except ValueError:
+        print("Por favor, ingrese un número válido.")
+
+# Crear lista de nombres de jugadores
+nombres_jugadores = []
+for i in range(num_jugadores):
+    nombre = input(f"Cual es el nombre del jugador {i+1}? ")
+    nombres_jugadores.append(nombre)
+
+# Asignar roles aleatoriamente
+roles = [Enemigo, Medico, Policia] + [Pueblo] * (num_jugadores - 3)
+random.shuffle(roles)
+
+# Crear instancias de jugadores con roles asignados
+jugadores = []
+for i in range(num_jugadores):
+    rol = roles[i]
+    jugador = rol(nombres_jugadores[i])
+    jugadores.append(jugador)
+
+# Mostrar los roles asignados (puedes comentar esta parte para mantener los roles en secreto)
+for jugador in jugadores:
+    print(f"{jugador.nombre} es un {jugador.__class__.__name__}.")
