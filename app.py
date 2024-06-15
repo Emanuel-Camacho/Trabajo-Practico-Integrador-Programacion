@@ -1,6 +1,6 @@
-# se debe separar el codigo en diferentes archivos para entrega final
-
 import random
+import funciones
+import jugadores
 
 # Clase base Jugador
 class Jugador:
@@ -48,53 +48,83 @@ class Medico(Jugador):
         else:
             print(f"{self.nombre} (Medico) no necesita salvar a {jugador.nombre}, ya está vivo.")
 
-
 # MAIN
 while True:
     try:
         num_jugadores = int(input("¿Cuántos jugadores hay? "))
-        if num_jugadores >= 4:
-            break
+        if num_jugadores <= 4 or num_jugadores > 10:
+            print("Los jugadores deben ser mínimo 4 y máximo 10")
         else:
-            print("No hay suficientes jugadores, deben ser 4 o más.")
+            break
     except ValueError:
         print("Por favor, ingrese un número válido.")
 
-TODOS_LOS_JUGADORES = [] 
-# lista que va a guardar a cada juagador y su nombre con la 'class jugador' para despues modificarla y dar los roles especificos 
+# lista que va a guardar a cada jugador y su nombre con la 'class jugador' para después modificarla y dar los roles específicos 
 for i in range(num_jugadores):
     nombre = input(f"¿Cuál es el nombre del jugador {i+1}? ")
-    TODOS_LOS_JUGADORES.append(Jugador(nombre))
+    jugadores.TODOS_LOS_JUGADORES.append(Jugador(nombre))
 
 # seleccionar al azar a 3 jugadores de la lista TODOS_LOS_JUGADORES
-jugadores_seleccionados = random.sample(TODOS_LOS_JUGADORES, 3)
+jugadores_seleccionados = random.sample(jugadores.TODOS_LOS_JUGADORES, 3)
 jugadores_seleccionados[0] = Policia(jugadores_seleccionados[0].nombre)
 jugadores_seleccionados[1] = Enemigo(jugadores_seleccionados[1].nombre)
 jugadores_seleccionados[2] = Medico(jugadores_seleccionados[2].nombre)
 
-# si alguno de los jugadores seleccionados conincide su nombre con alguno de la lista de TODOS_LOS_JUGADORES se actualiza su nombre por las dudas = ????? 
+# si alguno de los jugadores seleccionados coincide su nombre con alguno de la lista de TODOS_LOS_JUGADORES se actualiza su nombre por las dudas
 for i in range(3):
     for j in range(num_jugadores):
-        if TODOS_LOS_JUGADORES[j].nombre == jugadores_seleccionados[i].nombre:
-            TODOS_LOS_JUGADORES[j] = jugadores_seleccionados[i]
+        if jugadores.TODOS_LOS_JUGADORES[j].nombre == jugadores_seleccionados[i].nombre:
+            jugadores.TODOS_LOS_JUGADORES[j] = jugadores_seleccionados[i]
             break  # Salir del bucle una vez que se actualizó el jugador
 
 # todos los que no fueron seleccionados son de 'class Pueblo'
-for i in range(len(TODOS_LOS_JUGADORES)):
-    if not isinstance(TODOS_LOS_JUGADORES[i], (Policia, Enemigo, Medico)): 
+for i in range(len(jugadores.TODOS_LOS_JUGADORES)):
+    if not isinstance(jugadores.TODOS_LOS_JUGADORES[i], (Policia, Enemigo, Medico)): 
         # si TODOS_LOS_JUGADORES[i] (un jugador) no es (not) Policia, Enemigo o Medico lo hace Pueblo
-        TODOS_LOS_JUGADORES[i] = Pueblo(TODOS_LOS_JUGADORES[i].nombre)
+        jugadores.TODOS_LOS_JUGADORES[i] = Pueblo(jugadores.TODOS_LOS_JUGADORES[i].nombre)
 
-# muestra nombre y roles de cada jugador 
-# sacar para entrega final
-for jugador in TODOS_LOS_JUGADORES:
+# muestra nombre y roles de cada jugador
+# quitar para entrega final
+print("\n")
+for jugador in jugadores.TODOS_LOS_JUGADORES:
     print(f"Jugador: {jugador.nombre}, Estado: {'Vivo' if jugador.estado else 'Muerto'}, Rol: {jugador.__class__.__name__}")
 
-""" # EMPIEZA EL JUEGO
+print("\n")
+
+# EMPIEZA EL JUEGO
 while True:
-    for i in range(len(TODOS_LOS_JUGADORES)):
-        if isinstance(TODOS_LOS_JUGADORES[i], (Pueblo)):
-            print("")
-        else:
-            # comprobar si enemigo esta vivo o muerto
-            print("") """
+
+    for i in range(len(jugadores.TODOS_LOS_JUGADORES)):
+    
+        if isinstance(jugadores.TODOS_LOS_JUGADORES[i], (Pueblo, Medico)): 
+            if jugadores.TODOS_LOS_JUGADORES[i].estado == True: # si pueblo/medico sigue vivo
+                
+                for j in range(len(jugadores.TODOS_LOS_JUGADORES)): 
+                    if isinstance(jugadores.TODOS_LOS_JUGADORES[j], (Enemigo)): # si enemigo sigue vivo 
+                        if jugadores.TODOS_LOS_JUGADORES[j].estado == True:
+
+                            # JUEGO / TURNOS ENEMIGO - MEDICO - POLICIA
+                            print("Turno del enemigo")
+                            print("A qué jugador quiere eliminar\n")
+                            print(funciones.restantes())
+                            
+                            elegido = input()
+
+                            break
+            else:
+                print(f"Jugador: {jugadores.TODOS_LOS_JUGADORES[i].nombre}, {jugadores.TODOS_LOS_JUGADORES[i].__class__.__name__} Muerto")
+    
+        else: # comprueba si el enemigo está vivo
+            if isinstance(jugadores.TODOS_LOS_JUGADORES[i], (Enemigo)):
+                if jugadores.TODOS_LOS_JUGADORES[i].estado == True:
+                    print(f"{jugadores.TODOS_LOS_JUGADORES[i].__class__.__name__} Vivo")
+                    # comprobar si quedan pueblos vivos si sí ganan si no pierden
+                else:
+                    print(f"{jugadores.TODOS_LOS_JUGADORES[i].__class__.__name__} Muerto")
+                    # comprobar si quedan pueblos vivos si sí ganan si no pierden
+                    break
+        if isinstance(jugadores.TODOS_LOS_JUGADORES[i], (Policia)):
+            print(f"{jugadores.TODOS_LOS_JUGADORES[i].__class__.__name__} Vivo")
+    break
+
+print("\nTERMINÓ EL JUEGO")
