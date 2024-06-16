@@ -1,4 +1,5 @@
 class Jugador:
+    # comodin = 1
     def __init__(self, nombre):
         self.nombre = str(nombre)
         self.estado = True  # Vivo
@@ -13,7 +14,7 @@ class Enemigo(Jugador):
 
     def eliminar(self, jugador):
         if isinstance(jugador, Policia):
-            print(f"{self.nombre} (Enemigo) ha perdido por querer eliminar a un {jugador.__class__.__name__}.")
+            print(f"{self.__class__.__name__} ha perdido por querer eliminar a un {jugador.__class__.__name__}.")
             self.estado = False
         else:
             print(f"{jugador.__class__.__name__} ha sido eliminado por el Enemigo.")
@@ -25,9 +26,10 @@ class Policia(Jugador):
 
     def acusar(self, jugador):
         if isinstance(jugador, Enemigo):
-            print(f"{self.nombre} (Policia) ha acusado correctamente a {jugador.nombre} (Enemigo).")
+            print(f"{self.__class__.__name__} ha acusado correctamente a {jugador.nombre} ({jugador.__class__.__name__}).")
+            jugador.estado = False
         else:
-            print(f"{self.nombre} (Policia) ha acusado incorrectamente a {jugador.nombre} ({jugador.__class__.__name__}).")
+            print(f"{self.__class__.__name__} ha acusado incorrectamente a {jugador.__class__.__name__}.")
 
 class Medico(Jugador):
     def __init__(self, nombre):
@@ -36,6 +38,6 @@ class Medico(Jugador):
     def salvar(self, jugador):
         if not jugador.estado:
             jugador.estado = True
-            print(f"{self.__class__.__name__} ha salvado a {jugador.__class__.__name__}.")
+            print(f"{self.__class__.__name__} ha salvado a alguien.")
         else:
-            print(f"{self.__class__.__name__} no necesita salvar a {jugador.__class__.__name__} porque ya está vivo.")
+            print(f"{self.__class__.__name__} no necesita salvar a ese jugador porque ya está vivo.")
