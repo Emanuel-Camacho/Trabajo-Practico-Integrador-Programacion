@@ -39,3 +39,5 @@ def muertos():
             print(f"{jugador.__class__.__name__} esta muerto")
         else:
             print(f"{jugador.__class__.__name__} esta vivo")
+
+
