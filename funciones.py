@@ -1,10 +1,27 @@
-import jugadores
-from jugadores import TODOS_LOS_JUGADORES, mostrar_vivos, quedan_vivos
 from clases import Jugador, Pueblo, Enemigo, Policia, Medico
+from jugadores import TODOS_LOS_JUGADORES  
 
-def restantes():
-    for i in range(len(jugadores.TODOS_LOS_JUGADORES)):
-        if isinstance(jugadores.TODOS_LOS_JUGADORES[i], (Medico, Pueblo)):
-            if jugadores.TODOS_LOS_JUGADORES[i].estado == True:
-                print(f"{jugadores.TODOS_LOS_JUGADORES[i].__class__.__name__} VIVO , Nombre {jugadores.TODOS_LOS_JUGADORES[i].nombre}")
+def validar_elegido(pedido):
+    for jugador in TODOS_LOS_JUGADORES:
+        if ((jugador.nombre == pedido) and (jugador.estado == True)):
+            return jugador
+    return None
+
+def validar_vivo(pedido):
+    for jugador in TODOS_LOS_JUGADORES:
+        if (jugador.nombre == pedido):
+            return jugador
+    return None
+
+def estado_completo():
+    print("\nEstado de los jugadores:")
+    # Mostrar estado inicial de todos los jugadores
+    for jugador in TODOS_LOS_JUGADORES:
+        print(f"Jugador: {jugador.nombre}, Estado: {'Vivo' if jugador.estado else 'Muerto'}, Rol: {jugador.__class__.__name__}")
+
+def estado_jugadores():
+    print("\nEstado de los jugadores:")
+    # Mostrar estado inicial de todos los jugadores
+    for jugador in TODOS_LOS_JUGADORES:
+        print(f"Jugador: {jugador.nombre}")
 

@@ -1,7 +1,7 @@
 class Jugador:
     def __init__(self, nombre):
-        self.nombre = nombre
-        self.estado = True
+        self.nombre = str(nombre)
+        self.estado = True  # Vivo
 
 class Pueblo(Jugador):
     def __init__(self, nombre):
@@ -12,10 +12,11 @@ class Enemigo(Jugador):
         super().__init__(nombre)
 
     def eliminar(self, jugador):
-        if isinstance(jugador, Policia) or isinstance(jugador, Medico):
-            print(f"{self.nombre} (Enemigo) ha perdido por eliminar a un {jugador.__class__.__name__}.")
+        if isinstance(jugador, Policia):
+            print(f"{self.nombre} (Enemigo) ha perdido por querer eliminar a un {jugador.__class__.__name__}.")
+            self.estado = False
         else:
-            print(f"{self.nombre} (Enemigo) ha eliminado a {jugador.nombre}.")
+            print(f"{jugador.__class__.__name__} ha sido eliminado por el Enemigo.")
             jugador.estado = False
 
 class Policia(Jugador):
@@ -35,6 +36,6 @@ class Medico(Jugador):
     def salvar(self, jugador):
         if not jugador.estado:
             jugador.estado = True
-            print(f"{self.nombre} (Medico) ha salvado a {jugador.nombre}.")
+            print(f"{self.__class__.__name__} ha salvado a {jugador.__class__.__name__}.")
         else:
-            print(f"{self.nombre} (Medico) no necesita salvar a {jugador.nombre}, ya está vivo.")
+            print(f"{self.__class__.__name__} no necesita salvar a {jugador.__class__.__name__} porque ya está vivo.")
