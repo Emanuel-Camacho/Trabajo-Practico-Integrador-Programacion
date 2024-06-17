@@ -78,7 +78,7 @@ while True:
                 for E in jugadores.TODOS_LOS_JUGADORES:
                     if isinstance(E, Enemigo):
                         os.system("cls")
-                        E.eliminar(jugador_elegido)
+                        E._eliminar(jugador_elegido)
                         break
                 break
             else:
@@ -109,7 +109,7 @@ while True:
                             # si el elegido es el Medico y esta muerto se salva el mismo
                             if isinstance(jugador_elegido, Medico) and jugador_elegido.estado == False:
                                 os.system("cls")
-                                M.salvar(jugador_elegido)
+                                M._salvar(jugador_elegido)
                                 break
 
                             # si el elegido no es el medico y el medico esta muerto
@@ -122,13 +122,13 @@ while True:
                             # si el elegido no es el medico y el medico esta vivo el elegido se salva
                             elif not isinstance(jugador_elegido, Medico) and any((isinstance(jugador, Medico)) and (jugador.estado == True) for jugador in jugadores.TODOS_LOS_JUGADORES): 
                                 os.system("cls")
-                                M.salvar(jugador_elegido)
+                                M._salvar(jugador_elegido)
                                 break
 
                             # si el elegido es el medico y esta vivo se "salva"
                             else:
                                 os.system("cls")
-                                M.salvar(jugador_elegido)
+                                M._salvar(jugador_elegido)
                                 break
                     break
                 else:
@@ -155,7 +155,7 @@ while True:
                         for P in jugadores.TODOS_LOS_JUGADORES:
                             if isinstance(P, Policia):
                                 os.system("cls")
-                                P.acusar(jugador_elegido)
+                                P._acusar(jugador_elegido)
                                 break
                         break
                     else:

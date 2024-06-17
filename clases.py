@@ -12,7 +12,7 @@ class Enemigo(Jugador):
     def __init__(self, nombre):
         super().__init__(nombre)
 
-    def eliminar(self, jugador):
+    def _eliminar(self, jugador):
         if isinstance(jugador, Policia):
             print(f"{self.__class__.__name__} ha perdido por querer eliminar a un {jugador.__class__.__name__}.")
             self.estado = False
@@ -24,7 +24,7 @@ class Policia(Jugador):
     def __init__(self, nombre):
         super().__init__(nombre)
 
-    def acusar(self, jugador):
+    def _acusar(self, jugador):
         if isinstance(jugador, Enemigo):
             print(f"{self.__class__.__name__} ha acusado correctamente a {jugador.nombre} ({jugador.__class__.__name__}).")
             jugador.estado = False
@@ -35,7 +35,7 @@ class Medico(Jugador):
     def __init__(self, nombre):
         super().__init__(nombre)
 
-    def salvar(self, jugador):
+    def _salvar(self, jugador):
         if not jugador.estado:
             jugador.estado = True
             print(f"{self.__class__.__name__} ha salvado a alguien.")
