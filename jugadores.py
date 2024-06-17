@@ -4,9 +4,11 @@ import random
 
 TODOS_LOS_JUGADORES = []
 
+# el jugador que se agrega es de class Jugador
 def agregar_jugador(nombre):
     TODOS_LOS_JUGADORES.append(Jugador(nombre))
 
+# en la lista TODOS_LOS_JUGADORES se asignan los roles automaticamente y de forma aleatoria
 def roles_automaticos(num_jugadores):
     # Seleccionar aleatoriamente Policía, Enemigo y Médico
     jugadores_seleccionados = random.sample(TODOS_LOS_JUGADORES, 3)

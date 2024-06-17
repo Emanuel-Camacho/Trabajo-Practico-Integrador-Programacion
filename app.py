@@ -5,6 +5,8 @@ import funciones
 from clases import Pueblo, Enemigo, Policia, Medico
 
 # REGLAS
+os.system("cls")
+
 print("\nBienvenidos al Juego de Mafia por Roles")
 input("\nPresione enter para continuar...")
 
@@ -12,14 +14,12 @@ os.system("cls")
 
 print("\nREGLAS")
 print("\n1. Debe haber minimo 4 jugadores (Pueblo, Enemigo, Policia y Medico) y maximo 10")
-print("2. Solo puede haber 1 Enemigo, Policia y Medico.")
+print("2. Solo puede haber 1 Enemigo, 1 Policia y 1 Medico.")
 print("3. El Enemigo gana si elimina a todos.")
-print("4. El Enemigo no puede eliminar al policia.")
-print("5. El medico puede salvar a cualquie jugador, menos al enemigo")
-print("6. Si el Medico muere puede salvarse a si mismo")
+print("4. El Enemigo no puede eliminar al Policia.")
+print("5. El medico puede salvar a cualquier jugador, menos al enemigo")
+print("6. Si el Medico 'muere' puede salvarse a si mismo")
 print("7. El polica puede acusar a cualquier jugador")
-# print("8. Cada Rol puede activar un comodin 1 sola vez ingresando '0'")
-
 input("\nPresione enter para comenzar a jugar...")
 
 os.system("cls")
@@ -47,7 +47,7 @@ os.system("cls")
 # Inicia el juego
 print("\nComienza el juego:")
 
-posible = True
+posible = True # sirve para saber si el medico murio o no ¿usar .estado?
 while True:
 
     if any((isinstance(jugador, (Pueblo, Medico))) and (jugador.estado == True) for jugador in jugadores.TODOS_LOS_JUGADORES): # si hay al menos 1 Medico / Pueblo y esta vivo el juego sigue
@@ -63,7 +63,7 @@ while True:
         break
 
     # TURNOS
-    
+
     # ENEMIGO
     print("\nTURNO DEL ENEMIGO")
     print("\nA qué jugador quiere eliminar:")
@@ -83,13 +83,13 @@ while True:
                 break
             else:
                 os.system("cls")
-                print("Jugador muerto")
+                print("El enemigo no ha eliminado a nadie")
                 break
         else:
             print("Jugador no válido")
 
 
-    #validar si enemigo esta vivo o muerto
+    # validar si enemigo esta vivo o muerto 
     if any(isinstance(jugador,Enemigo) and jugador.estado == True for jugador in jugadores.TODOS_LOS_JUGADORES):
 
     # MEDICO
@@ -138,39 +138,39 @@ while True:
         
         # POLICIA
         print("\nTURNO DEL POLICIA")
-        print("Quiere acusar a alguien ?\nS / N")
 
         while True:
-
+            
+            print("Quiere acusar a alguien ?\nS / N")
             pedido = str(input("--> "))
-
+            
             if pedido.upper() == "S":
                 print("\nA quien quiere acusar:")
                 funciones.estado_policia()
                 
-                pedido = str(input("--> "))
-                jugador_elegido = funciones.validar_existe(pedido)
-
-                if jugador_elegido is not None:
-                    for P in jugadores.TODOS_LOS_JUGADORES:
-                        if isinstance(P, Policia):
-                            os.system("cls")
-                            P.acusar(jugador_elegido)
-                            break
-                    break
-                else:
-                    print("Jugador no válido o vivo")
-                break
-
+                while True:
+                    pedido = str(input("---> "))
+                    jugador_elegido = funciones.validar_existe(pedido)
+                    if (jugador_elegido is not None) and (not isinstance(jugador_elegido, Policia)):
+                        for P in jugadores.TODOS_LOS_JUGADORES:
+                            if isinstance(P, Policia):
+                                os.system("cls")
+                                P.acusar(jugador_elegido)
+                                break
+                        break
+                    else:
+                        print("Jugador no válido o vivo")
+            
             elif (pedido.upper() != "S") and (pedido.upper() != "N"):
                 print("Opcion equivocada")
             else:
                 os.system("cls")
                 print("El Policia no acuso a nadie.")
                 break
+            
+            break
     else:
         pass
-    
 
 
 
