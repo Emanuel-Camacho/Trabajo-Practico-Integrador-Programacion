@@ -27,7 +27,7 @@ os.system("cls")
 while True:
     try:
         num_jugadores = int(input("¿Cuántos jugadores hay? "))
-        if num_jugadores < 4 or num_jugadores > 10:
+        if num_jugadores < 4 and num_jugadores > 10:
             print("Los jugadores deben ser mínimo 4 y máximo 10")
         else:
             break
@@ -50,16 +50,16 @@ print("\nComienza el juego:")
 posible = True # sirve para saber si el medico murio o no ¿usar .estado?
 while True:
 
-    if any((isinstance(jugador, (Pueblo, Medico))) and (jugador.estado == True) for jugador in jugadores.TODOS_LOS_JUGADORES): # si hay al menos 1 Medico / Pueblo y esta vivo el juego sigue
+    if any((isinstance(jugador, (Pueblo, Medico))) and (jugador._estado == True) for jugador in jugadores.TODOS_LOS_JUGADORES): # si hay al menos 1 Medico / Pueblo y esta vivo el juego sigue
         
-        if any((isinstance(ENE, Enemigo)) and (ENE.estado == True) for ENE in jugadores.TODOS_LOS_JUGADORES): # si el enemigo ESTÁ vivo el juego sigue
+        if any((isinstance(ENE, Enemigo)) and (ENE._estado == True) for ENE in jugadores.TODOS_LOS_JUGADORES): # si el enemigo ESTÁ vivo el juego sigue
             pass
         else:
             print("\nEl Enemigo ha muerto. El Pueblo gana.") # Enemigo muerto, no hay mas TURNOS
             break
     
     else:
-        print("\nTodo el pueblo ha muerto. Gana el Enemigo.") # Pueblo / Medico muerto, no hay mas TURNOS
+        print("\nTodos los jugadores han muerto. Gana el Enemigo.") # Pueblo / Medico muerto, no hay mas TURNOS
         break
 
     # TURNOS
@@ -74,24 +74,23 @@ while True:
         jugador_elegido = funciones.validar_existe(pedido)
 
         if (jugador_elegido is not None) and (not isinstance(jugador_elegido, Enemigo)): # si el jugador existe y no es el enemigo lo elimina
-            if jugador_elegido.estado is True: 
+            if jugador_elegido._estado is True: 
                 for E in jugadores.TODOS_LOS_JUGADORES:
                     if isinstance(E, Enemigo):
                         os.system("cls")
-                        E._eliminar(jugador_elegido)
-                        break
-                break
+                        E.eliminar(jugador_elegido)
+                        break # cierra el for para que no busque mas al enemigo
+                break # cierra el turno del enemigo
             else:
                 os.system("cls")
                 print("El enemigo no ha eliminado a nadie")
-                break
+                break # cierra el turno del enemigo
         else:
             print("Jugador no válido")
 
-
-    # validar si enemigo esta vivo o muerto 
-    if any(isinstance(jugador,Enemigo) and jugador.estado == True for jugador in jugadores.TODOS_LOS_JUGADORES):
-
+    # validar si enemigo esta vivo o muerto
+    if any(isinstance(jugador,Enemigo) and jugador._estado == True for jugador in jugadores.TODOS_LOS_JUGADORES):
+    
     # MEDICO
         if posible == True: 
             print("\nTURNO DEL MEDICO")
@@ -107,28 +106,28 @@ while True:
                         if isinstance(M, Medico): # 2 lineas para encontrar y seleccioanar al medico
 
                             # si el elegido es el Medico y esta muerto se salva el mismo
-                            if isinstance(jugador_elegido, Medico) and jugador_elegido.estado == False:
+                            if isinstance(jugador_elegido, Medico) and jugador_elegido._estado == False:
                                 os.system("cls")
-                                M._salvar(jugador_elegido)
+                                M.salvar(jugador_elegido)
                                 break
 
                             # si el elegido no es el medico y el medico esta muerto
-                            elif not isinstance(jugador_elegido, Medico) and any((isinstance(jugador, Medico)) and (jugador.estado == False) for jugador in jugadores.TODOS_LOS_JUGADORES):
+                            elif not isinstance(jugador_elegido, Medico) and any((isinstance(jugador, Medico)) and (jugador._estado == False) for jugador in jugadores.TODOS_LOS_JUGADORES):
                                 os.system("cls")
                                 print("El Medico no puede salvar a nadie porque esta muerto")
                                 posible = False
                                 break
                             
                             # si el elegido no es el medico y el medico esta vivo el elegido se salva
-                            elif not isinstance(jugador_elegido, Medico) and any((isinstance(jugador, Medico)) and (jugador.estado == True) for jugador in jugadores.TODOS_LOS_JUGADORES): 
+                            elif not isinstance(jugador_elegido, Medico) and any((isinstance(jugador, Medico)) and (jugador._estado == True) for jugador in jugadores.TODOS_LOS_JUGADORES): 
                                 os.system("cls")
-                                M._salvar(jugador_elegido)
+                                M.salvar(jugador_elegido)
                                 break
 
                             # si el elegido es el medico y esta vivo se "salva"
                             else:
                                 os.system("cls")
-                                M._salvar(jugador_elegido)
+                                M.salvar(jugador_elegido)
                                 break
                     break
                 else:
@@ -155,11 +154,11 @@ while True:
                         for P in jugadores.TODOS_LOS_JUGADORES:
                             if isinstance(P, Policia):
                                 os.system("cls")
-                                P._acusar(jugador_elegido)
+                                P.acusar(jugador_elegido)
                                 break
                         break
                     else:
-                        print("Jugador no válido o vivo")
+                        print("Jugador no válido")
             
             elif (pedido.upper() != "S") and (pedido.upper() != "N"):
                 print("Opcion equivocada")
@@ -170,10 +169,7 @@ while True:
             
             break
     else:
-        pass
-
-
-
+        break
 
 funciones.estado_completo()
 print("\nTERMINÓ EL JUEGO")
